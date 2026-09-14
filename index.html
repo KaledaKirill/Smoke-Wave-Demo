@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vapor — оптовый кабинет</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="#catalog" aria-label="Vapor главная">VAPOR<span>•</span></a>
+    <nav class="tabs" aria-label="Основная навигация">
+      <button class="tab active" data-tab="catalog">Каталог</button>
+      <button class="tab" data-tab="cart">Корзина <b class="cart-badge">3</b></button>
+      <button class="tab" data-tab="orders">Мои заказы</button>
+      <button class="tab admin-tab" data-tab="admin">Админ-панель</button>
+    </nav>
+    <button class="account" type="button"><span class="avatar">Д</span><span>Дмитрий</span><span class="chevron">⌄</span></button>
+  </header>
+
+  <main>
+    <section class="view active" id="catalog">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">ОПТОВАЯ ПЛАТФОРМА</p>
+          <h1>Всё для вашей<br>витрины в одном месте</h1>
+          <p class="hero-text">Актуальные остатки, оптовые цены и быстрая сборка заказа.</p>
+        </div>
+        <div class="hero-orb one"></div><div class="hero-orb two"></div>
+        <div class="hero-tag">от 3 000 ₽<small>минимальный заказ</small></div>
+      </div>
+
+      <div class="catalog-toolbar">
+        <h2>Каталог <span>248 товаров</span></h2>
+        <label class="search"><span>⌕</span><input type="search" placeholder="Поиск по товарам" /></label>
+      </div>
+      <div class="chips" aria-label="Категории">
+        <button class="chip selected">Все товары</button><button class="chip">Одноразки</button><button class="chip">Жидкости</button><button class="chip">Устройства</button><button class="chip">Картриджи</button><button class="chip">Аксессуары</button>
+      </div>
+
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-image blue"><span class="sale">−15%</span><div class="device device-one">WAKA<br><b>soPro</b></div></div>
+          <div class="product-info"><p class="brand">WAKA</p><h3>soPro 20 000</h3><p class="flavor">Blueberry Raspberry</p><div class="price-row"><strong>1 190 ₽</strong><s>1 400 ₽</s></div><div class="buy-row"><button class="minus">−</button><span>2 шт.</span><button class="plus">+</button><button class="add" aria-label="В корзину">+</button></div></div>
+        </article>
+        <article class="product-card">
+          <div class="product-image violet"><div class="device device-two">DRAG<br><b>X2</b></div></div>
+          <div class="product-info"><p class="brand">VOOPOO</p><h3>Drag X2</h3><p class="flavor">Satin Black</p><div class="price-row"><strong>2 850 ₽</strong></div><div class="buy-row"><button class="add wide">В корзину</button></div></div>
+        </article>
+        <article class="product-card">
+          <div class="product-image peach"><span class="hit">ХИТ</span><div class="bottle">BAD<br><b>DRIP</b><small>50ml</small></div></div>
+          <div class="product-info"><p class="brand">BAD DRIP</p><h3>Bad Blood</h3><p class="flavor">Pomegranate Blueberry</p><div class="price-row"><strong>690 ₽</strong></div><div class="buy-row"><button class="add wide">В корзину</button></div></div>
+        </article>
+        <article class="product-card">
+          <div class="product-image mint"><div class="device device-three">HQD<br><b>VIGO</b></div></div>
+          <div class="product-info"><p class="brand">HQD</p><h3>Vigo 20 000</h3><p class="flavor">Kiwi Passion Fruit</p><div class="price-row"><strong>1 050 ₽</strong></div><div class="buy-row"><button class="add wide">В корзину</button></div></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="view" id="cart">
+      <div class="page-heading"><p class="eyebrow">ОФОРМЛЕНИЕ</p><h1>Корзина</h1><p>Проверьте позиции и укажите данные для доставки.</p></div>
+      <div class="checkout-layout">
+        <div class="cart-panel">
+          <div class="cart-title"><h2>Товары <span>3 позиции</span></h2><button class="text-button">Очистить</button></div>
+          <div class="cart-item"><div class="mini-product blue"><div class="cart-device">WAKA</div></div><div class="item-main"><p class="brand">WAKA</p><h3>soPro 20 000</h3><p>Blueberry Raspberry</p></div><div class="counter"><button>−</button><b>2</b><button>+</button></div><strong class="item-price">2 380 ₽</strong><button class="remove" aria-label="Удалить товар">×</button></div>
+          <div class="cart-item"><div class="mini-product peach"><div class="cart-bottle"><span></span></div></div><div class="item-main"><p class="brand">BAD DRIP</p><h3>Bad Blood, 50 мл</h3><p>Pomegranate Blueberry</p></div><div class="counter"><button>−</button><b>1</b><button>+</button></div><strong class="item-price">690 ₽</strong><button class="remove" aria-label="Удалить товар">×</button></div>
+          <div class="notice"><span>i</span> Итоговая стоимость и наличие будут подтверждены менеджером после оформления.</div>
+        </div>
+        <aside class="summary"><h2>Ваш заказ</h2><div class="summary-line"><span>Товары, 3 шт.</span><b>3 070 ₽</b></div><div class="summary-line"><span>Доставка</span><em>Рассчитаем позже</em></div><div class="summary-total"><span>Итого</span><strong>3 070 ₽</strong></div><button class="primary" data-go="details">Перейти к оформлению</button><p class="summary-note">Нажимая кнопку, вы соглашаетесь с условиями оптовой продажи.</p></aside>
+      </div>
+
+      <section class="delivery" id="details"><div class="delivery-title"><span class="step">1</span><div><h2>Данные для доставки</h2><p>Нужны менеджеру, чтобы рассчитать и отправить заказ.</p></div></div><form class="order-form"><label>Город доставки<input value="Минск" placeholder="Например, Минск" /></label><fieldset><legend>Способ доставки</legend><div class="delivery-options"><label class="radio-card chosen"><input type="radio" name="delivery" checked><span class="radio-dot"></span><span><b>Маршрутка по Минску</b><small>Передача по городу</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Маршрутка в другой город</b><small>Передача на маршрутку</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Адресом по Минску</b><small>Доставка курьером</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Белпочта</b><small>В отделение или до двери</small></span></label></div></fieldset><label>Ваш username в Telegram <span class="optional">необязательно</span><div class="input-with-icon"><span>@</span><input value="dmitry_shop" placeholder="username" /></div><small>Менеджер напишет вам для подтверждения заказа.</small></label><label class="form-full">Примечание к заказу <span class="optional">необязательно</span><textarea placeholder="Например: не звонить, написать в Telegram"></textarea></label><button class="primary form-button" type="button">Оформить заказ на 3 070 ₽</button></form></section>
+    </section>
+
+    <section class="view" id="orders">
+      <div class="page-heading orders-heading"><p class="eyebrow">ИСТОРИЯ ПОКУПОК</p><h1>Мои заказы</h1><p>Здесь появятся оформленные заказы и документы по ним.</p></div>
+      <div class="order-filter"><button class="chip selected">Все <b>2</b></button><button class="chip">В работе <b>1</b></button><button class="chip">Завершены <b>1</b></button></div>
+      <article class="order-card">
+        <div class="order-top"><div><span class="status assembling"><i></i>Собираем заказ</span><h2>Заказ №MS-240918</h2><p>Оформлен сегодня, 14:32</p></div><strong>3 070 ₽</strong></div>
+        <div class="invoice"><div class="invoice-head"><span class="invoice-logo">VAPOR<span>•</span></span><span>НАКЛАДНАЯ № 240918</span></div><div class="invoice-content"><div><p>Получатель</p><b>Дмитрий · @dmitry_shop</b></div><div><p>Доставка</p><b>СДЭК · Минск</b></div><div><p>Позиций</p><b>3 шт. / 2 товара</b></div><div><p>К оплате</p><b>3 070 ₽</b></div></div></div>
+        <div class="order-meta"><div><span>Город</span><b>Минск</b></div><div><span>Telegram</span><b>@dmitry_shop</b></div><div><span>Примечание</span><b>Написать в Telegram</b></div><button class="invoice-btn">Скачать накладную <span>↓</span></button></div>
+      </article>
+      <article class="order-card closed"><div class="order-top"><div><span class="status done"><i>✓</i>Завершён</span><h2>Заказ №MS-240801</h2><p>01 августа 2024</p></div><strong>14 680 ₽</strong></div><div class="invoice faded"><div class="invoice-head"><span class="invoice-logo">VAPOR<span>•</span></span><span>НАКЛАДНАЯ № 240801</span></div><div class="invoice-content"><div><p>Получатель</p><b>Дмитрий · @dmitry_shop</b></div><div><p>Доставка</p><b>Самовывоз · Минск</b></div><div><p>Позиций</p><b>18 шт. / 6 товаров</b></div><div><p>К оплате</p><b>14 680 ₽</b></div></div></div><div class="order-meta"><div><span>Город</span><b>Минск</b></div><div><span>Telegram</span><b>@dmitry_shop</b></div><div><span>Примечание</span><b>—</b></div><button class="invoice-btn">Скачать накладную <span>↓</span></button></div></article>
+    </section>
+
+    <section class="view" id="admin">
+      <div class="page-heading orders-heading"><p class="eyebrow">УПРАВЛЕНИЕ ЗАКАЗАМИ</p><h1>Все заказы</h1><p>Собирайте заказы и отслеживайте доставку по городам.</p></div>
+      <div class="admin-filter-bar" aria-label="Фильтры заказов">
+        <div class="order-filter admin-status"><button class="chip selected" data-status="all">Все <b>3</b></button><button class="chip" data-status="pending">Несобранные <b>2</b></button><button class="chip" data-status="ready">Собранные <b>1</b></button></div>
+        <label class="city-filter"><span>⌖</span><select id="city-filter" aria-label="Город"><option value="all">Все города</option><option value="minsk">Минск</option><option value="grodno">Гродно</option><option value="brest">Брест</option></select></label>
+      </div>
+      <p class="admin-count" id="admin-count">Показано: 3 заказа</p>
+      <div class="admin-orders">
+        <article class="order-card admin-order" data-status="pending" data-city="minsk"><div class="order-top"><div><span class="status assembling"><i></i>Не собран</span><h2>Заказ №MS-240918</h2><p>Сегодня, 14:32 · Дмитрий · @dmitry_shop</p></div><strong>3 070 ₽</strong></div><div class="invoice invoice-shot"><div class="invoice-head"><span class="invoice-logo">VAPOR<span>•</span></span><span>НАКЛАДНАЯ № 240918</span></div><div class="invoice-content"><div><p>Получатель</p><b>Дмитрий · @dmitry_shop</b></div><div><p>Доставка</p><b>Маршрутка · Минск</b></div><div><p>Позиций</p><b>3 шт. / 2 товара</b></div><div><p>К оплате</p><b>3 070 ₽</b></div></div><div class="invoice-items"><span>WAKA soPro 20 000 × 2</span><span>Bad Blood, 50 мл × 1</span></div></div><div class="order-meta admin-meta"><div><span>Город</span><b>Минск</b></div><div><span>Способ доставки</span><b>Маршрутка по Минску</b></div><div><span>Примечание</span><b>Написать в Telegram</b></div><button class="assemble-btn" type="button">Отметить собранным <span>✓</span></button></div></article>
+        <article class="order-card admin-order" data-status="pending" data-city="grodno"><div class="order-top"><div><span class="status assembling"><i></i>Не собран</span><h2>Заказ №MS-240917</h2><p>Сегодня, 11:08 · Марина · @marina_vape</p></div><strong>8 490 ₽</strong></div><div class="invoice invoice-shot"><div class="invoice-head"><span class="invoice-logo">VAPOR<span>•</span></span><span>НАКЛАДНАЯ № 240917</span></div><div class="invoice-content"><div><p>Получатель</p><b>Марина · @marina_vape</b></div><div><p>Доставка</p><b>Белпочта · Гродно</b></div><div><p>Позиций</p><b>12 шт. / 4 товара</b></div><div><p>К оплате</p><b>8 490 ₽</b></div></div><div class="invoice-items"><span>HQD Vigo 20 000 × 8</span><span>Drag X2 × 2</span></div></div><div class="order-meta admin-meta"><div><span>Город</span><b>Гродно</b></div><div><span>Способ доставки</span><b>Белпочта</b></div><div><span>Примечание</span><b>Позвонить перед отправкой</b></div><button class="assemble-btn" type="button">Отметить собранным <span>✓</span></button></div></article>
+        <article class="order-card admin-order closed" data-status="ready" data-city="brest"><div class="order-top"><div><span class="status done"><i>✓</i>Собран</span><h2>Заказ №MS-240915</h2><p>Вчера, 17:46 · Денис · @denis_store</p></div><strong>14 680 ₽</strong></div><div class="invoice invoice-shot faded"><div class="invoice-head"><span class="invoice-logo">VAPOR<span>•</span></span><span>НАКЛАДНАЯ № 240915</span></div><div class="invoice-content"><div><p>Получатель</p><b>Денис · @denis_store</b></div><div><p>Доставка</p><b>Маршрутка · Брест</b></div><div><p>Позиций</p><b>18 шт. / 6 товаров</b></div><div><p>К оплате</p><b>14 680 ₽</b></div></div><div class="invoice-items"><span>WAKA soPro 20 000 × 10</span><span>Bad Blood, 50 мл × 8</span></div></div><div class="order-meta admin-meta"><div><span>Город</span><b>Брест</b></div><div><span>Способ доставки</span><b>Маршрутка в другой город</b></div><div><span>Примечание</span><b>—</b></div><span class="ready-note">Заказ собран</span></div></article>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
