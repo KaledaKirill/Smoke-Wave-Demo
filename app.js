@@ -250,9 +250,15 @@ function refreshAdmin() {
 
 function openAddProductModal(orderId) {
   document.querySelector('#admin-add-modal')?.remove();
-  const options = catalogProducts.map(product => `<option value="${product.id}">${product.brand} — ${product.name} · ${formatPrice(product.price)}</option>`).join('');
-  document.body.insertAdjacentHTML('beforeend', `<div class="success-modal is-open" id="admin-add-modal" aria-hidden="false"><div class="success-card add-product-card"><button class="modal-close" type="button" aria-label="Закрыть">×</button><p class="eyebrow">РЕДАКТОР НАКЛАДНОЙ</p><h2>Добавить товар</h2><form id="admin-add-form" data-order="${orderId}"><label>Товар<select name="product">${options}</select></label><label>Количество<input name="quantity" type="number" min="1" value="1" required></label><button class="primary" type="submit">Добавить в накладную</button></form></div></div>`);
+  const productOptions = query => catalogProducts.filter(product => `${product.brand} ${product.name} ${product.flavor}`.toLowerCase().includes(query.toLowerCase())).map(product => `<option value="${product.id}">${product.brand} — ${product.name} · ${formatPrice(product.price)}</option>`).join('');
+  document.body.insertAdjacentHTML('beforeend', `<div class="success-modal is-open" id="admin-add-modal" aria-hidden="false"><div class="success-card add-product-card"><button class="modal-close" type="button" aria-label="Закрыть">×</button><p class="eyebrow">РЕДАКТОР НАКЛАДНОЙ</p><h2>Добавить товар</h2><form id="admin-add-form" data-order="${orderId}"><label>Поиск товара<input id="admin-product-search" type="search" placeholder="Название, бренд или вкус" autocomplete="off"></label><label>Товар<select name="product" id="admin-product-select">${productOptions('')}</select></label><label>Количество<input name="quantity" type="number" min="1" value="1" required></label><button class="primary" type="submit">Добавить в накладную</button></form></div></div>`);
   document.querySelector('#admin-add-modal .modal-close').addEventListener('click', () => document.querySelector('#admin-add-modal').remove());
+  document.querySelector('#admin-product-search').addEventListener('input', event => {
+    const select = document.querySelector('#admin-product-select');
+    const hasMatches = catalogProducts.some(product => `${product.brand} ${product.name} ${product.flavor}`.toLowerCase().includes(event.target.value.toLowerCase()));
+    select.innerHTML = productOptions(event.target.value) || '<option disabled>Ничего не найдено</option>';
+    document.querySelector('#admin-add-form button[type="submit"]').disabled = !hasMatches;
+  });
 }
 
 function downloadInvoice(order) {
