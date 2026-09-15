@@ -176,6 +176,8 @@ document.querySelector('#order-form')?.addEventListener('submit', event => {
   document.querySelector('#order-number').textContent = `SW-${String(Date.now()).slice(-6)}`;
   successModal.classList.add('is-open');
   successModal.setAttribute('aria-hidden', 'false');
+  cartItems().forEach(item => item.remove());
+  updateCart();
 });
 
 function closeModal() {
