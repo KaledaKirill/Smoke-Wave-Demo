@@ -195,13 +195,37 @@ successModal?.addEventListener('click', event => { if (event.target === successM
 
 const adminStatus = document.querySelectorAll('.admin-status .chip');
 const cityFilter = document.querySelector('#city-filter');
-const adminOrders = document.querySelectorAll('.admin-order');
 const adminCount = document.querySelector('#admin-count');
+const adminOrdersContainer = document.querySelector('.admin-orders');
 let currentStatus = 'all';
+const adminOrdersData = [
+  { id: 'MS-240918', status: 'pending', city: 'minsk', cityName: 'Минск', customer: 'Дмитрий', telegram: '@dmitry_shop', delivery: 'Маршрутка по Минску', note: 'Написать в Telegram', items: [{ product: 'waka', price: 1190, quantity: 2 }, { product: 'bad-drip', price: 690, quantity: 1 }] },
+  { id: 'MS-240917', status: 'pending', city: 'grodno', cityName: 'Гродно', customer: 'Марина', telegram: '@marina_vape', delivery: 'Белпочта', note: 'Позвонить перед отправкой', items: [{ product: 'hqd', price: 1050, quantity: 8 }, { product: 'drag', price: 2850, quantity: 2 }] },
+  { id: 'MS-240915', status: 'ready', city: 'brest', cityName: 'Брест', customer: 'Денис', telegram: '@denis_store', delivery: 'Маршрутка в другой город', note: '—', items: [{ product: 'waka', price: 1190, quantity: 10 }, { product: 'bad-drip', price: 690, quantity: 8 }] },
+];
+
+function findAdminOrder(id) {
+  return adminOrdersData.find(order => order.id === id);
+}
+
+function adminTotal(order) {
+  return order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+}
+
+function renderAdminOrders() {
+  adminOrdersContainer.innerHTML = adminOrdersData.map(order => {
+    const ready = order.status === 'ready';
+    const rows = order.items.length ? order.items.map(item => {
+      const product = catalogProducts.find(entry => entry.id === item.product);
+      return `<div class="admin-invoice-row"><span><b>${product.name}</b><small>${product.flavor}</small></span><label><small>Цена</small><input class="invoice-input" data-field="price" data-product="${item.product}" type="number" min="0" value="${item.price}"> ₽</label><label><small>Кол-во</small><input class="invoice-input" data-field="quantity" data-product="${item.product}" type="number" min="1" value="${item.quantity}"> шт.</label><strong>${formatPrice(item.price * item.quantity)}</strong><button class="line-delete" data-admin-action="delete" data-product="${item.product}" type="button" aria-label="Удалить товар">×</button></div>`;
+    }).join('') : '<div class="admin-invoice-empty">В накладной нет товаров</div>';
+    return `<article class="order-card admin-order" data-status="${order.status}" data-city="${order.city}"><div class="order-top"><div><span class="status ${ready ? 'done' : 'assembling'}"><i>${ready ? '✓' : ''}</i>${ready ? 'Собран' : 'Не собран'}</span><h2>Заказ №${order.id}</h2><p>${order.customer} · ${order.telegram}</p></div><div class="admin-order-actions"><select class="status-select" data-order="${order.id}" aria-label="Статус заказа"><option value="pending" ${ready ? '' : 'selected'}>Не собран</option><option value="ready" ${ready ? 'selected' : ''}>Собран</option></select><strong>${formatPrice(adminTotal(order))}</strong></div></div><div class="invoice invoice-shot"><div class="invoice-head"><span class="invoice-logo">SMOKE WAVE<span>•</span></span><span>НАКЛАДНАЯ № ${order.id}</span></div><div class="admin-invoice-table"><div class="admin-invoice-labels"><span>Товар</span><span>Цена</span><span>Количество</span><span>Сумма</span></div>${rows}<div class="admin-invoice-total"><span>Итого по накладной</span><strong>${formatPrice(adminTotal(order))}</strong></div></div></div><div class="order-meta admin-meta"><div><span>Город</span><b>${order.cityName}</b></div><div><span>Доставка</span><b>${order.delivery}</b></div><div><span>Примечание</span><b>${order.note}</b></div><button class="admin-secondary" data-admin-action="add" type="button">+ Добавить товар</button><button class="assemble-btn" data-admin-action="download" type="button">Скачать накладную ↓</button></div></article>`;
+  }).join('');
+}
 
 function syncAdminCounts() {
-  const pending = document.querySelectorAll('.admin-order[data-status="pending"]').length;
-  const ready = document.querySelectorAll('.admin-order[data-status="ready"]').length;
+  const pending = adminOrdersData.filter(order => order.status === 'pending').length;
+  const ready = adminOrdersData.filter(order => order.status === 'ready').length;
   document.querySelector('[data-status="pending"] b').textContent = pending;
   document.querySelector('[data-status="ready"] b').textContent = ready;
   document.querySelector('[data-status="all"] b').textContent = pending + ready;
@@ -210,13 +234,37 @@ function syncAdminCounts() {
 function filterAdminOrders() {
   const city = cityFilter.value;
   let visible = 0;
-  adminOrders.forEach(order => {
-    const matchesStatus = currentStatus === 'all' || order.dataset.status === currentStatus;
-    const matchesCity = city === 'all' || order.dataset.city === city;
-    order.hidden = !(matchesStatus && matchesCity);
-    if (!order.hidden) visible += 1;
+  document.querySelectorAll('.admin-order').forEach(order => {
+    const show = (currentStatus === 'all' || order.dataset.status === currentStatus) && (city === 'all' || order.dataset.city === city);
+    order.hidden = !show;
+    if (show) visible += 1;
   });
   adminCount.textContent = `Показано: ${visible} ${visible === 1 ? 'заказ' : visible < 5 ? 'заказа' : 'заказов'}`;
+}
+
+function refreshAdmin() {
+  renderAdminOrders();
+  syncAdminCounts();
+  filterAdminOrders();
+}
+
+function openAddProductModal(orderId) {
+  document.querySelector('#admin-add-modal')?.remove();
+  const options = catalogProducts.map(product => `<option value="${product.id}">${product.brand} — ${product.name} · ${formatPrice(product.price)}</option>`).join('');
+  document.body.insertAdjacentHTML('beforeend', `<div class="success-modal is-open" id="admin-add-modal" aria-hidden="false"><div class="success-card add-product-card"><button class="modal-close" type="button" aria-label="Закрыть">×</button><p class="eyebrow">РЕДАКТОР НАКЛАДНОЙ</p><h2>Добавить товар</h2><form id="admin-add-form" data-order="${orderId}"><label>Товар<select name="product">${options}</select></label><label>Количество<input name="quantity" type="number" min="1" value="1" required></label><button class="primary" type="submit">Добавить в накладную</button></form></div></div>`);
+  document.querySelector('#admin-add-modal .modal-close').addEventListener('click', () => document.querySelector('#admin-add-modal').remove());
+}
+
+function downloadInvoice(order) {
+  const lines = [`Smoke Wave — накладная №${order.id}`, `Получатель: ${order.customer} (${order.telegram})`, `Город: ${order.cityName}`, `Доставка: ${order.delivery}`, '', 'Товар | Цена | Количество | Сумма'];
+  order.items.forEach(item => { const product = catalogProducts.find(entry => entry.id === item.product); lines.push(`${product.name} | ${formatPrice(item.price)} | ${item.quantity} шт. | ${formatPrice(item.price * item.quantity)}`); });
+  lines.push('', `ИТОГО: ${formatPrice(adminTotal(order))}`);
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' }));
+  link.href = url;
+  link.download = `invoice-${order.id}.txt`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 adminStatus.forEach(button => button.addEventListener('click', () => {
@@ -226,17 +274,42 @@ adminStatus.forEach(button => button.addEventListener('click', () => {
 }));
 cityFilter?.addEventListener('change', filterAdminOrders);
 
-document.querySelectorAll('.assemble-btn').forEach(button => button.addEventListener('click', () => {
-  const order = button.closest('.admin-order');
-  order.dataset.status = 'ready';
-  const status = order.querySelector('.status');
-  status.className = 'status done';
-  status.innerHTML = '<i>✓</i>Собран';
-  button.replaceWith(Object.assign(document.createElement('span'), { className: 'ready-note', textContent: 'Заказ собран' }));
-  syncAdminCounts();
-  filterAdminOrders();
-  showToast('Заказ отмечен как собранный');
-}));
+adminOrdersContainer.addEventListener('click', event => {
+  const button = event.target.closest('[data-admin-action]');
+  if (!button) return;
+  const order = findAdminOrder(button.closest('.admin-order').querySelector('.status-select').dataset.order);
+  const action = button.dataset.adminAction;
+  if (action === 'add') openAddProductModal(order.id);
+  if (action === 'download') downloadInvoice(order);
+  if (action === 'delete') { order.items = order.items.filter(item => item.product !== button.dataset.product); refreshAdmin(); showToast('Товар удалён из накладной'); }
+});
+
+adminOrdersContainer.addEventListener('change', event => {
+  const order = findAdminOrder(event.target.closest('.admin-order').querySelector('.status-select').dataset.order);
+  if (event.target.classList.contains('status-select')) { order.status = event.target.value; refreshAdmin(); return; }
+  if (!event.target.classList.contains('invoice-input')) return;
+  const item = order.items.find(entry => entry.product === event.target.dataset.product);
+  const value = Number(event.target.value);
+  if (event.target.dataset.field === 'price' && value >= 0) item.price = value;
+  if (event.target.dataset.field === 'quantity' && value >= 1) item.quantity = value;
+  refreshAdmin();
+});
+
+document.addEventListener('submit', event => {
+  if (event.target.id !== 'admin-add-form') return;
+  event.preventDefault();
+  const order = findAdminOrder(event.target.dataset.order);
+  const product = catalogProducts.find(entry => entry.id === event.target.product.value);
+  const quantity = Number(event.target.quantity.value);
+  const existing = order.items.find(item => item.product === product.id);
+  if (existing) existing.quantity += quantity;
+  else order.items.push({ product: product.id, price: product.price, quantity });
+  document.querySelector('#admin-add-modal').remove();
+  refreshAdmin();
+  showToast('Товар добавлен в накладную');
+});
+
+refreshAdmin();
 
 updateCart();
 document.querySelectorAll('.invoice-logo').forEach(logo => logo.firstChild.textContent = 'SMOKE WAVE');
