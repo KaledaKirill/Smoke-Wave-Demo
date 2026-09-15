@@ -76,11 +76,18 @@ function bindCartControls(item) {
   item.querySelectorAll('.counter button').forEach(button => button.addEventListener('click', () => {
     const quantity = button.parentElement.querySelector('b');
     const next = Number(quantity.textContent) + (button.dataset.quantity === 'increase' ? 1 : -1);
-    if (next < 1) return;
+    if (next < 1) {
+      quantity.textContent = 0;
+      item.hidden = true;
+      updateCart();
+      showToast('Товар удалён из корзины');
+      return;
+    }
     quantity.textContent = next;
     updateCart();
   }));
   item.querySelector('.remove').addEventListener('click', () => {
+    item.querySelector('.counter b').textContent = 0;
     item.hidden = true;
     updateCart();
     showToast('Товар удалён из корзины');
@@ -90,7 +97,10 @@ function bindCartControls(item) {
 document.querySelectorAll('[data-cart-item]').forEach(bindCartControls);
 
 document.querySelector('#clear-cart')?.addEventListener('click', () => {
-  cartItems().forEach(item => item.hidden = true);
+  cartItems().forEach(item => {
+    item.querySelector('.counter b').textContent = 0;
+    item.hidden = true;
+  });
   updateCart();
   showToast('Корзина очищена');
 });
