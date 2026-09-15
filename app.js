@@ -48,7 +48,7 @@ const placeOrderButton = document.querySelector('#place-order');
 const checkoutButton = document.querySelector('#checkout-button');
 
 function cartItems() {
-  return [...document.querySelectorAll('[data-cart-item]')].filter(item => !item.hidden);
+  return [...document.querySelectorAll('[data-cart-item]')];
 }
 
 function updateCart() {
@@ -70,6 +70,7 @@ function updateCart() {
   placeOrderButton.textContent = total ? `Оформить заказ на ${formatPrice(total)}` : 'Корзина пуста';
   placeOrderButton.disabled = !total;
   checkoutButton.disabled = !total;
+  syncCatalogControls();
 }
 
 function bindCartControls(item) {
@@ -77,8 +78,7 @@ function bindCartControls(item) {
     const quantity = button.parentElement.querySelector('b');
     const next = Number(quantity.textContent) + (button.dataset.quantity === 'increase' ? 1 : -1);
     if (next < 1) {
-      quantity.textContent = 0;
-      item.hidden = true;
+      item.remove();
       updateCart();
       showToast('Товар удалён из корзины');
       return;
@@ -87,8 +87,7 @@ function bindCartControls(item) {
     updateCart();
   }));
   item.querySelector('.remove').addEventListener('click', () => {
-    item.querySelector('.counter b').textContent = 0;
-    item.hidden = true;
+    item.remove();
     updateCart();
     showToast('Товар удалён из корзины');
   });
@@ -97,10 +96,7 @@ function bindCartControls(item) {
 document.querySelectorAll('[data-cart-item]').forEach(bindCartControls);
 
 document.querySelector('#clear-cart')?.addEventListener('click', () => {
-  cartItems().forEach(item => {
-    item.querySelector('.counter b').textContent = 0;
-    item.hidden = true;
-  });
+  cartItems().forEach(item => item.remove());
   updateCart();
   showToast('Корзина очищена');
 });
@@ -111,33 +107,52 @@ function addNewCartItem(product) {
   item.dataset.cartItem = '';
   item.dataset.product = product.id;
   item.dataset.price = product.price;
-  item.innerHTML = `<div class="mini-product ${product.color}"><div class="cart-device">${product.brand}</div></div><div class="item-main"><p class="brand">${product.brand}</p><h3>${product.name}</h3><p>${product.flavor}</p></div><div class="counter"><button type="button" data-quantity="decrease">−</button><b>1</b><button type="button" data-quantity="increase">+</button></div><strong class="item-price"></strong><button class="remove" type="button" aria-label="Удалить товар">×</button>`;
+  const deviceClass = product.id === 'bad-drip' ? 'cart-device red' : 'cart-device';
+  item.innerHTML = `<div class="mini-product ${product.color}"><div class="${deviceClass}">${product.brand}</div></div><div class="item-main"><p class="brand">${product.brand}</p><h3>${product.name}</h3><p>${product.flavor}</p></div><div class="counter"><button type="button" data-quantity="decrease">−</button><b>1</b><button type="button" data-quantity="increase">+</button></div><strong class="item-price"></strong><button class="remove" type="button" aria-label="Удалить товар">×</button>`;
   document.querySelector('.notice').before(item);
   bindCartControls(item);
   return item;
 }
 
-document.querySelectorAll('.product-card .add').forEach(button => button.addEventListener('click', () => {
+function syncCatalogControls() {
+  document.querySelectorAll('.product-card').forEach(card => {
+    const item = document.querySelector(`[data-cart-item][data-product="${card.dataset.product}"]`);
+    const buyRow = card.querySelector('.buy-row');
+    if (!item) {
+      buyRow.innerHTML = '<button class="add wide" type="button">В корзину</button>';
+      return;
+    }
+    const quantity = item.querySelector('.counter b').textContent;
+    buyRow.innerHTML = `<div class="catalog-counter"><button type="button" data-catalog-quantity="decrease">−</button><b>${quantity} шт.</b><button type="button" data-catalog-quantity="increase">+</button></div>`;
+  });
+}
+
+document.querySelector('.product-grid')?.addEventListener('click', event => {
+  const button = event.target.closest('button');
+  if (!button) return;
   const card = button.closest('.product-card');
+  if (!card) return;
   const product = catalogProducts.find(item => item.id === card.dataset.product);
-  const cartMatch = [...document.querySelectorAll('[data-cart-item]')].find(item => item.dataset.product === product.id);
-  if (cartMatch) {
-    cartMatch.hidden = false;
-    cartMatch.querySelector('.counter b').textContent = Number(cartMatch.querySelector('.counter b').textContent) + 1;
+  let cartMatch = document.querySelector(`[data-cart-item][data-product="${product.id}"]`);
+
+  if (button.classList.contains('add')) {
+    cartMatch = addNewCartItem(product);
+    updateCart();
+    showToast(`${product.name} добавлен в корзину`);
+    return;
+  }
+
+  if (!button.dataset.catalogQuantity || !cartMatch) return;
+  const quantity = cartMatch.querySelector('.counter b');
+  const next = Number(quantity.textContent) + (button.dataset.catalogQuantity === 'increase' ? 1 : -1);
+  if (next < 1) {
+    cartMatch.remove();
+    showToast('Товар удалён из корзины');
   } else {
-    addNewCartItem(product);
+    quantity.textContent = next;
   }
   updateCart();
-  button.textContent = '✓';
-  setTimeout(() => button.textContent = button.classList.contains('wide') ? 'В корзину' : '+', 900);
-  showToast(`${product.name} добавлен в корзину`);
-}));
-
-document.querySelectorAll('.product-card .minus, .product-card .plus').forEach(button => button.addEventListener('click', () => {
-  const quantity = button.parentElement.querySelector('span');
-  const next = Number.parseInt(quantity.textContent) + (button.classList.contains('plus') ? 1 : -1);
-  if (next > 0) quantity.textContent = `${next} шт.`;
-}));
+});
 
 document.querySelector('.search input')?.addEventListener('input', event => {
   const query = event.target.value.trim().toLowerCase();
