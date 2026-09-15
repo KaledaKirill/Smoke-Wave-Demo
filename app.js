@@ -46,6 +46,7 @@ const summarySubtotal = document.querySelector('#summary-subtotal');
 const summaryTotal = document.querySelector('#summary-total');
 const placeOrderButton = document.querySelector('#place-order');
 const checkoutButton = document.querySelector('#checkout-button');
+const emptyCart = document.querySelector('#empty-cart');
 
 function cartItems() {
   return [...document.querySelectorAll('[data-cart-item]')];
@@ -70,7 +71,13 @@ function updateCart() {
   placeOrderButton.textContent = total ? `Оформить заказ на ${formatPrice(total)}` : 'Корзина пуста';
   placeOrderButton.disabled = !total;
   checkoutButton.disabled = !total;
+  emptyCart.hidden = quantity > 0;
   syncCatalogControls();
+}
+
+function clearCart() {
+  cartItems().forEach(item => item.remove());
+  updateCart();
 }
 
 function bindCartControls(item) {
@@ -96,8 +103,7 @@ function bindCartControls(item) {
 document.querySelectorAll('[data-cart-item]').forEach(bindCartControls);
 
 document.querySelector('#clear-cart')?.addEventListener('click', () => {
-  cartItems().forEach(item => item.remove());
-  updateCart();
+  clearCart();
   showToast('Корзина очищена');
 });
 
@@ -176,8 +182,7 @@ document.querySelector('#order-form')?.addEventListener('submit', event => {
   document.querySelector('#order-number').textContent = `SW-${String(Date.now()).slice(-6)}`;
   successModal.classList.add('is-open');
   successModal.setAttribute('aria-hidden', 'false');
-  cartItems().forEach(item => item.remove());
-  updateCart();
+  clearCart();
 });
 
 function closeModal() {

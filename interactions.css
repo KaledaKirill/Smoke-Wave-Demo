@@ -1,6 +1,10 @@
 .header { justify-content: flex-start; }
 [hidden] { display: none !important; }
 .cart-device.red { background: linear-gradient(130deg, #f25972, #c81742); }
+.empty-cart { display: grid; min-height: 210px; padding: 40px 20px; color: #8c99ad; text-align: center; place-items: center; align-content: center; }
+.empty-cart span { display: grid; width: 42px; height: 42px; margin-bottom: 8px; color: #7ca4f8; font-size: 25px; place-items: center; background: #edf3ff; border-radius: 50%; }
+.empty-cart b { color: #59687f; font-size: 14px; }
+.empty-cart p { margin: 5px 0 0; font-size: 12px; }
 .catalog-counter { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 2px; background: #eef3fb; border-radius: 8px; }
 .catalog-counter button { width: 32px; height: 28px; border: 0; color: #075eff; font-size: 18px; cursor: pointer; background: #fff; border-radius: 7px; }
 .catalog-counter b { color: #182237; font-size: 12px; }
