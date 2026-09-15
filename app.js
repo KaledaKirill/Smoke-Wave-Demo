@@ -47,6 +47,8 @@ const summaryTotal = document.querySelector('#summary-total');
 const placeOrderButton = document.querySelector('#place-order');
 const checkoutButton = document.querySelector('#checkout-button');
 const emptyCart = document.querySelector('#empty-cart');
+const summaryDelivery = document.querySelector('.summary .summary-line:nth-of-type(2) em');
+let deliveryExtra = 5;
 
 function cartItems() {
   return [...document.querySelectorAll('[data-cart-item]')];
@@ -67,8 +69,9 @@ function updateCart() {
   cartPositionCount.textContent = positionLabel;
   summaryQuantity.textContent = `Товары, ${quantity} шт.`;
   summarySubtotal.textContent = formatPrice(total);
-  summaryTotal.textContent = formatPrice(total);
-  placeOrderButton.textContent = total ? `Оформить заказ на ${formatPrice(total)}` : 'Корзина пуста';
+  const payable = total + deliveryExtra;
+  summaryTotal.textContent = formatPrice(payable);
+  placeOrderButton.textContent = total ? `Оформить заказ на ${formatPrice(payable)}` : 'Корзина пуста';
   placeOrderButton.disabled = !total;
   checkoutButton.disabled = !total;
   emptyCart.hidden = quantity > 0;
@@ -174,6 +177,44 @@ document.querySelectorAll('.radio-card').forEach(card => card.addEventListener('
   document.querySelectorAll('.radio-card').forEach(item => item.classList.toggle('chosen', item === card));
   card.querySelector('input').checked = true;
 }));
+
+const deliveryForm = document.querySelector('#order-form');
+const deliveryFieldset = deliveryForm.querySelector('fieldset');
+const originalCityField = [...deliveryForm.children].find(element => element.tagName === 'LABEL');
+const telegramField = [...deliveryForm.children].find(element => element.querySelector('input[value="dmitry_shop"]'));
+const deliveryFields = document.createElement('div');
+deliveryFields.className = 'delivery-fields form-full';
+deliveryFields.id = 'delivery-fields';
+originalCityField.remove();
+deliveryFieldset.classList.add('delivery-fieldset');
+deliveryForm.insertBefore(deliveryFields, telegramField);
+
+const deliveryMethods = [
+  { id: 'minsk-route', fee: 5, label: 'Маршрутка по Минску', price: '+5 BYN к сумме заказа', detail: 'Передача по городу. Укажите номер телефона для связи с водителем.', fields: [{ name: 'phone', label: 'Телефон', type: 'tel', placeholder: '+375 29 000-00-00' }] },
+  { id: 'intercity-route', fee: 0, label: 'Маршрутка в другой город', price: 'Обычно 10–15 BYN — оплачивается отдельно', detail: 'Стоимость доставки не входит в сумму заказа для сборки.', fields: [{ name: 'city', label: 'Город доставки', type: 'text', placeholder: 'Например, Гродно' }] },
+  { id: 'minsk-courier', fee: 15, label: 'Адресом по Минску', price: '+15 BYN к сумме заказа', detail: 'За МКАД стоимость может быть выше — менеджер согласует её отдельно.', fields: [{ name: 'phone', label: 'Телефон', type: 'tel', placeholder: '+375 29 000-00-00' }, { name: 'address', label: 'Адрес доставки', type: 'text', placeholder: 'Улица, дом, квартира' }] },
+  { id: 'belpost', fee: 0, label: 'Белпочта', price: 'Стоимость рассчитает менеджер', detail: 'Нужны данные получателя для оформления отправления.', fields: [{ name: 'phone', label: 'Телефон', type: 'tel', placeholder: '+375 29 000-00-00' }, { name: 'full-name', label: 'ФИО получателя', type: 'text', placeholder: 'Иванов Иван Иванович' }, { name: 'postal-code', label: 'Почтовый индекс', type: 'text', placeholder: '220000', pattern: '[0-9]{6}' }] },
+];
+
+function renderDeliveryFields(method) {
+  const inputs = method.fields.map(field => `<label>${field.label}<input name="${field.name}" type="${field.type}" placeholder="${field.placeholder}" ${field.pattern ? `pattern="${field.pattern}"` : ''} required></label>`).join('');
+  deliveryFields.innerHTML = `<div class="delivery-policy"><span>Условия доставки</span><b>${method.price}</b><p>${method.detail}</p></div><div class="delivery-inputs">${inputs}</div>`;
+  summaryDelivery.textContent = method.fee ? `+ ${method.fee} BYN` : method.id === 'intercity-route' ? 'Оплачивается отдельно' : 'Рассчитаем позже';
+}
+
+function selectDeliveryMethod(method) {
+  deliveryExtra = method.fee;
+  renderDeliveryFields(method);
+  updateCart();
+}
+
+document.querySelectorAll('.radio-card').forEach((card, index) => {
+  const method = deliveryMethods[index];
+  card.dataset.delivery = method.id;
+  card.addEventListener('click', () => selectDeliveryMethod(method));
+});
+
+selectDeliveryMethod(deliveryMethods[0]);
 
 const successModal = document.querySelector('#order-success');
 document.querySelector('#order-form')?.addEventListener('submit', event => {
