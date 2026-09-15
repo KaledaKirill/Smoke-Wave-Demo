@@ -3,22 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vapor — оптовый кабинет</title>
+  <title>Smoke Wave — оптовый кабинет</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="interactions.css" />
 </head>
 <body>
   <header class="header">
-    <a class="logo" href="#catalog" aria-label="Vapor главная">VAPOR<span>•</span></a>
+    <a class="logo" href="#catalog" aria-label="Smoke Wave главная">SMOKE WAVE<span>•</span></a>
     <nav class="tabs" aria-label="Основная навигация">
       <button class="tab active" data-tab="catalog">Каталог</button>
       <button class="tab" data-tab="cart">Корзина <b class="cart-badge">3</b></button>
-      <button class="tab" data-tab="orders">Мои заказы</button>
       <button class="tab admin-tab" data-tab="admin">Админ-панель</button>
     </nav>
-    <button class="account" type="button"><span class="avatar">Д</span><span>Дмитрий</span><span class="chevron">⌄</span></button>
   </header>
 
   <main>
@@ -65,18 +64,18 @@
       <div class="page-heading"><p class="eyebrow">ОФОРМЛЕНИЕ</p><h1>Корзина</h1><p>Проверьте позиции и укажите данные для доставки.</p></div>
       <div class="checkout-layout">
         <div class="cart-panel">
-          <div class="cart-title"><h2>Товары <span>3 позиции</span></h2><button class="text-button">Очистить</button></div>
-          <div class="cart-item"><div class="mini-product blue"><div class="cart-device">WAKA</div></div><div class="item-main"><p class="brand">WAKA</p><h3>soPro 20 000</h3><p>Blueberry Raspberry</p></div><div class="counter"><button>−</button><b>2</b><button>+</button></div><strong class="item-price">2 380 ₽</strong><button class="remove" aria-label="Удалить товар">×</button></div>
-          <div class="cart-item"><div class="mini-product peach"><div class="cart-bottle"><span></span></div></div><div class="item-main"><p class="brand">BAD DRIP</p><h3>Bad Blood, 50 мл</h3><p>Pomegranate Blueberry</p></div><div class="counter"><button>−</button><b>1</b><button>+</button></div><strong class="item-price">690 ₽</strong><button class="remove" aria-label="Удалить товар">×</button></div>
+          <div class="cart-title"><h2>Товары <span id="cart-position-count">3 позиции</span></h2><button class="text-button" id="clear-cart" type="button">Очистить</button></div>
+          <div class="cart-item" data-cart-item data-product="waka" data-price="1190"><div class="mini-product blue"><div class="cart-device">WAKA</div></div><div class="item-main"><p class="brand">WAKA</p><h3>soPro 20 000</h3><p>Blueberry Raspberry</p></div><div class="counter"><button type="button" data-quantity="decrease">−</button><b>2</b><button type="button" data-quantity="increase">+</button></div><strong class="item-price">2 380 ₽</strong><button class="remove" type="button" aria-label="Удалить товар">×</button></div>
+          <div class="cart-item" data-cart-item data-product="bad-drip" data-price="690"><div class="mini-product peach"><div class="cart-bottle"><span></span></div></div><div class="item-main"><p class="brand">BAD DRIP</p><h3>Bad Blood, 50 мл</h3><p>Pomegranate Blueberry</p></div><div class="counter"><button type="button" data-quantity="decrease">−</button><b>1</b><button type="button" data-quantity="increase">+</button></div><strong class="item-price">690 ₽</strong><button class="remove" type="button" aria-label="Удалить товар">×</button></div>
           <div class="notice"><span>i</span> Итоговая стоимость и наличие будут подтверждены менеджером после оформления.</div>
         </div>
-        <aside class="summary"><h2>Ваш заказ</h2><div class="summary-line"><span>Товары, 3 шт.</span><b>3 070 ₽</b></div><div class="summary-line"><span>Доставка</span><em>Рассчитаем позже</em></div><div class="summary-total"><span>Итого</span><strong>3 070 ₽</strong></div><button class="primary" data-go="details">Перейти к оформлению</button><p class="summary-note">Нажимая кнопку, вы соглашаетесь с условиями оптовой продажи.</p></aside>
+        <aside class="summary"><h2>Ваш заказ</h2><div class="summary-line"><span id="summary-quantity">Товары, 3 шт.</span><b id="summary-subtotal">3 070 ₽</b></div><div class="summary-line"><span>Доставка</span><em>Рассчитаем позже</em></div><div class="summary-total"><span>Итого</span><strong id="summary-total">3 070 ₽</strong></div><button class="primary" id="checkout-button" data-go="details" type="button">Перейти к оформлению</button><p class="summary-note">Нажимая кнопку, вы соглашаетесь с условиями оптовой продажи.</p></aside>
       </div>
 
-      <section class="delivery" id="details"><div class="delivery-title"><span class="step">1</span><div><h2>Данные для доставки</h2><p>Нужны менеджеру, чтобы рассчитать и отправить заказ.</p></div></div><form class="order-form"><label>Город доставки<input value="Минск" placeholder="Например, Минск" /></label><fieldset><legend>Способ доставки</legend><div class="delivery-options"><label class="radio-card chosen"><input type="radio" name="delivery" checked><span class="radio-dot"></span><span><b>Маршрутка по Минску</b><small>Передача по городу</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Маршрутка в другой город</b><small>Передача на маршрутку</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Адресом по Минску</b><small>Доставка курьером</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Белпочта</b><small>В отделение или до двери</small></span></label></div></fieldset><label>Ваш username в Telegram <span class="optional">необязательно</span><div class="input-with-icon"><span>@</span><input value="dmitry_shop" placeholder="username" /></div><small>Менеджер напишет вам для подтверждения заказа.</small></label><label class="form-full">Примечание к заказу <span class="optional">необязательно</span><textarea placeholder="Например: не звонить, написать в Telegram"></textarea></label><button class="primary form-button" type="button">Оформить заказ на 3 070 ₽</button></form></section>
+      <section class="delivery" id="details"><div class="delivery-title"><span class="step">1</span><div><h2>Данные для доставки</h2><p>Нужны менеджеру, чтобы рассчитать и отправить заказ.</p></div></div><form class="order-form" id="order-form"><label>Город доставки<input required value="Минск" placeholder="Например, Минск" /></label><fieldset><legend>Способ доставки</legend><div class="delivery-options"><label class="radio-card chosen"><input type="radio" name="delivery" checked><span class="radio-dot"></span><span><b>Маршрутка по Минску</b><small>Передача по городу</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Маршрутка в другой город</b><small>Передача на маршрутку</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Адресом по Минску</b><small>Доставка курьером</small></span></label><label class="radio-card"><input type="radio" name="delivery"><span class="radio-dot"></span><span><b>Белпочта</b><small>В отделение или до двери</small></span></label></div></fieldset><label>Ваш username в Telegram <span class="optional">необязательно</span><div class="input-with-icon"><span>@</span><input value="dmitry_shop" placeholder="username" /></div><small>Менеджер напишет вам для подтверждения заказа.</small></label><label class="form-full">Примечание к заказу <span class="optional">необязательно</span><textarea placeholder="Например: не звонить, написать в Telegram"></textarea></label><button class="primary form-button" id="place-order" type="submit">Оформить заказ на 3 070 ₽</button></form></section>
     </section>
 
-    <section class="view" id="orders">
+    <section class="view" id="orders" hidden>
       <div class="page-heading orders-heading"><p class="eyebrow">ИСТОРИЯ ПОКУПОК</p><h1>Мои заказы</h1><p>Здесь появятся оформленные заказы и документы по ним.</p></div>
       <div class="order-filter"><button class="chip selected">Все <b>2</b></button><button class="chip">В работе <b>1</b></button><button class="chip">Завершены <b>1</b></button></div>
       <article class="order-card">
@@ -101,6 +100,9 @@
       </div>
     </section>
   </main>
+  <div class="success-modal" id="order-success" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="success-title">
+    <div class="success-card"><button class="modal-close" type="button" aria-label="Закрыть">×</button><div class="success-icon">✓</div><p class="eyebrow">ЗАКАЗ ОФОРМЛЕН</p><h2 id="success-title">Заказ принят</h2><p>Ваш номер заказа</p><strong id="order-number">SW-000000</strong><div class="remember-note">Запомните этот номер и передайте его менеджеру при подтверждении заказа.</div><button class="primary" type="button" data-close-modal="order-success">Понятно</button></div>
+  </div>
   <script src="app.js"></script>
 </body>
 </html>

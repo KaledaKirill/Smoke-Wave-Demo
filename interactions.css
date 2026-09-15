@@ -1,0 +1,15 @@
+.header { justify-content: flex-start; }
+.primary:disabled { background: #b6c6e5; cursor: not-allowed; }
+.success-modal { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; padding: 20px; background: #14213b70; }
+.success-modal.is-open { display: flex; }
+.success-card { position: relative; width: min(420px, 100%); padding: 35px 30px 29px; text-align: center; background: #fff; border-radius: 20px; box-shadow: 0 25px 60px #11182735; }
+.success-card h2 { margin: 8px 0; font-size: 25px; letter-spacing: -1px; }
+.success-card > p:not(.eyebrow) { margin: 0 0 5px; color: #8290a6; font-size: 13px; }
+.success-icon { display: grid; width: 54px; height: 54px; margin: 0 auto 17px; color: #0aa06a; font-size: 28px; font-weight: 800; place-items: center; background: #e3f8ed; border-radius: 50%; }
+.success-card #order-number { display: block; margin-bottom: 16px; color: #075eff; font-size: 28px; letter-spacing: -1px; }
+.remember-note { padding: 12px 14px; color: #5074ad; font-size: 12px; line-height: 1.5; text-align: left; background: #edf4ff; border-radius: 10px; }
+.success-card .primary { margin-top: 15px; }
+.modal-close { position: absolute; top: 12px; right: 15px; border: 0; color: #8190a7; font-size: 25px; cursor: pointer; background: none; }
+.toast { position: fixed; bottom: 25px; left: 50%; z-index: 30; padding: 12px 17px; color: #fff; font-size: 12px; font-weight: 700; background: #1f2a3e; border-radius: 10px; box-shadow: 0 9px 28px #0c173233; transform: translateX(-50%); animation: toast-in .2s ease-out; }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (max-width: 520px) { .success-card { padding: 30px 22px 22px; } .header { gap: 18px; } .tabs { gap: 18px; } }
